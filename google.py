@@ -5,9 +5,9 @@ from HandleJs import Py4Js
 
 def is_chinese(uchar):
     if uchar >=u'\u4e00' and uchar<=u'\u9fa5':
-        return True
+        return 'True'
     else:
-        return False
+        return 'False'
 
 def translate(context):
     s=requests.Session();
@@ -34,23 +34,27 @@ def translate(context):
         }
     r = s.get(url,headers=headers)
     s.close()
-    out=""
-    result = r.text.split('"')
-    loop = len(result)
-    def is_chinese1(uchar):
-        for i in uchar :
-            if i>=u'\u4e00' and i<=u'\u9fa5':
-               return True
-
-    for a in range(1,int(loop/2-2)):
-        if(result[a]=="en"):
-            break
-        if(is_chinese1(result[a])):
-            out+=result[a]
-    return out
+    if(targe_lang=="zh-cn"):
+        out=""
+        result = r.text.split('"')
+        loop = len(result)
+        def is_chinese1(uchar):
+            for i in uchar :
+                if i>=u'\u4e00' and i<=u'\u9fa5':
+                   return True
+        for a in range(1,int(loop/2-2)):
+            if(result[a]=="en"):
+                break
+            if(is_chinese1(result[a])):
+                out+=result[a]
+        return out
+    else:
+        result = r.text.split(',')[0]
+        result = result.lstrip('[]')
+        return result
 
 def saveresult(context):
-    with open("result.txt",'a') as f:
+    with open("result.txt",'a+') as f:
         f.writelines(context)
     f.close()
 
@@ -69,6 +73,7 @@ def filetranslate(filename):
                 continue
             else:
                 a = translate(line)
+                saveresult(a)
 
 if __name__ =="__main__":
     trans = input("if you want to translate file input 1 or input 2 :")
