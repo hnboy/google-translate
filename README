@@ -1,1 +1,6 @@
-simply tool for translating using google
+Jusr for fun! simply tool for translating using google
+file translate :
+    python google-translate.py file.txt
+word translate:
+    python google-translate.py
+
